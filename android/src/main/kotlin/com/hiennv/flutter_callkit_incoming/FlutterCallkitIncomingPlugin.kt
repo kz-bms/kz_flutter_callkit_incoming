@@ -9,6 +9,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.hiennv.flutter_callkit_incoming.Utils.Companion.reapCollection
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -74,6 +76,14 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             eventHandlers.add(WeakReference(handler))
             events.setStreamHandler(handler)
 
+        }
+
+        fun isAppVisible() : Boolean {
+            return ProcessLifecycleOwner
+                .get()
+                .lifecycle
+                .currentState
+                .isAtLeast(Lifecycle.State.STARTED)
         }
 
     }

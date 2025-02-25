@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Lifecycle
-
 class TransparentActivity : Activity() {
 
     companion object {
@@ -32,15 +30,20 @@ class TransparentActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         val data = intent.getBundleExtra("data")
+        val launchStatus = intent.getBooleanExtra("LAUNCH_APPLICATION", false)
 
         val broadcastIntent = CallkitIncomingBroadcastReceiver.getIntent(this, intent.action!!, data)
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         sendBroadcast(broadcastIntent)
 
         val activityIntent = AppUtils.getAppIntent(this, intent.action, data)
-        startActivity(activityIntent)
+
+        if(launchStatus){
+            startActivity(activityIntent)
+        }
 
         finish()
         overridePendingTransition(0, 0)
     }
+
 }
