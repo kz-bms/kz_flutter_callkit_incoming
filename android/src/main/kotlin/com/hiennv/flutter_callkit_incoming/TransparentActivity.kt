@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.LifecycleOwner
 
 class TransparentActivity : Activity() {
 
@@ -40,19 +38,9 @@ class TransparentActivity : Activity() {
         sendBroadcast(broadcastIntent)
 
         val activityIntent = AppUtils.getAppIntent(this, intent.action, data)
-        if(!isAppVisible()){
-            startActivity(activityIntent)
-        }
+        startActivity(activityIntent)
 
         finish()
         overridePendingTransition(0, 0)
-    }
-
-    private fun isAppVisible(): Boolean {
-        return ProcessLifecycleOwner
-            .get()
-            .lifecycle
-            .currentState
-            .isAtLeast(Lifecycle.State.STARTED)
     }
 }
