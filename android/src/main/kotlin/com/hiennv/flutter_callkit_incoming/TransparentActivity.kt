@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.hiennv.flutter_callkit_incoming.FlutterCallkitIncomingPlugin
 
 class TransparentActivity : Activity() {
 
@@ -31,13 +32,17 @@ class TransparentActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         val data = intent.getBundleExtra("data")
+        val launchApp = intent.getBooleanExtra("LAUNCH_APPLICATION", false)
 
         val broadcastIntent = CallkitIncomingBroadcastReceiver.getIntent(this, intent.action!!, data)
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         sendBroadcast(broadcastIntent)
 
         val activityIntent = AppUtils.getAppIntent(this, intent.action, data)
-        startActivity(activityIntent)
+
+        if(launchApp || !(FlutterCallkitIncomingPlugin.isAppVisible())){
+            startActivity(activityIntent)
+        }
 
         finish()
         overridePendingTransition(0, 0)

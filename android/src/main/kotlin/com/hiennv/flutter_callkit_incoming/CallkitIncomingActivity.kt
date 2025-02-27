@@ -30,6 +30,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.os.PowerManager
 import android.text.TextUtils
 import android.util.Log
+import com.hiennv.flutter_callkit_incoming.FlutterCallkitIncomingPlugin
 
 
 class CallkitIncomingActivity : Activity() {
@@ -42,6 +43,7 @@ class CallkitIncomingActivity : Activity() {
         fun getIntent(context: Context, data: Bundle) = Intent(CallkitConstants.ACTION_CALL_INCOMING).apply {
             action = "${context.packageName}.${CallkitConstants.ACTION_CALL_INCOMING}"
             putExtra(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA, data)
+            putExtra("LAUNCH_APPLICATION", !(FlutterCallkitIncomingPlugin.isAppVisible()))
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
@@ -294,6 +296,7 @@ class CallkitIncomingActivity : Activity() {
     private fun onAcceptClick() {
         val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
         val acceptIntent = TransparentActivity.getIntent(this, CallkitConstants.ACTION_CALL_ACCEPT, data)
+        acceptIntent.putExtra("LAUNCH_APPLICATION",  intent.getBooleanExtra("LAUNCH_APPLICATION", false))
         startActivity(acceptIntent)
 
         dismissKeyguard()

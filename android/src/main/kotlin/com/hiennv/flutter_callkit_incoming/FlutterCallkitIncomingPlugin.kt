@@ -18,6 +18,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.lang.ref.WeakReference
 
+import androidx.lifecycle.Lifecycle
+
+import androidx.lifecycle.ProcessLifecycleOwner
+
 
 /** FlutterCallkitIncomingPlugin */
 class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.RequestPermissionsResultListener {
@@ -74,6 +78,13 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             eventHandlers.add(WeakReference(handler))
             events.setStreamHandler(handler)
 
+        }
+
+        fun isAppVisible(): Boolean {
+            return ProcessLifecycleOwner.get()
+                .lifecycle
+                .currentState
+                .isAtLeast(Lifecycle.State.STARTED)
         }
 
     }
